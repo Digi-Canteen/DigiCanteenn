@@ -1,6 +1,6 @@
 {
-    "name": "annapura_canteen_app",
-    "short_name": "annapura_canteen_app",
+    "name": "DigiCanteen",
+    "short_name": "DigiCanteen",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

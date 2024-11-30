@@ -1,4 +1,4 @@
-# annapura_canteen_app
+# DigiCanteen
 
 A new Flutter project.
 
