@@ -9,7 +9,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  
   final Map<String, List<Map<String, String>>> foodCategories = {
     'Breakfast': [
       {'image': 'assets/images/Idli.jpeg', 'name': 'Idli'},
@@ -42,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ],
   };
 
-  
   void _showProductDialog(BuildContext context, Map<String, String> item) {
     showDialog(
       context: context,
@@ -92,7 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 TextButton(
                   child: const Text('Add to Cart'),
                   onPressed: () {
-                  
                     Navigator.of(context).pop();
                   },
                 ),
@@ -110,7 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Method to get category icon
   IconData _getCategoryIcon(String category) {
     switch (category) {
       case 'Breakfast':
@@ -126,93 +122,117 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Exit App'),
+            content: const Text('Do you want to exit the app?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Yes'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
           automaticallyImplyLeading: false,
-        backgroundColor: Colors.orange,
-        centerTitle: true,
-        title: const Text(
-          'Welcome!',
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-    body: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Order Food',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
+          backgroundColor: Colors.orange,
+          centerTitle: true,
+          title: const Text(
+            'Welcome!',
+            style: TextStyle(color: Colors.black),
           ),
         ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 1,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Order Food',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
-                itemCount: foodCategories.keys.length,
-                itemBuilder: (context, index) {
-                  String category = foodCategories.keys.elementAt(index);
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CategoryDetailScreen(
-                            category: category,
-                            items: foodCategories[category]!,
-                            onItemTap: _showProductDialog,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            _getCategoryIcon(category),
-                            size: 50,
-                            color: Colors.orange,
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            category,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 1,
+                  ),
+                  itemCount: foodCategories.keys.length,
+                  itemBuilder: (context, index) {
+                    String category = foodCategories.keys.elementAt(index);
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CategoryDetailScreen(
+                              category: category,
+                              items: foodCategories[category]!,
+                              onItemTap: _showProductDialog,
                             ),
                           ),
-                        ],
+                        );
+                      },
+                      child: Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              _getCategoryIcon(category),
+                              size: 50,
+                              color: Colors.orange,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              category,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
+        bottomNavigationBar: const BottomNavigation(),
       ),
-      bottomNavigationBar: const BottomNavigation(),
     );
   }
 }
